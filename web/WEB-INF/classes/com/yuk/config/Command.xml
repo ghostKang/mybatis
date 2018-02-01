@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+		<!DOCTYPE mapper
+				PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+				"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Command">
+
+	<resultMap id="Command" type="com.yuk.bean.Command">
+		<id column="c_id" jdbcType="INTEGER" property="id"/>
+		<result column="name" jdbcType="VARCHAR" property="name"/>
+		<result column="description" jdbcType="VARCHAR" property="description"/>
+		<collection property="contentList" resultMap="CommandContent.Content"/>
+	</resultMap>
+
+	<select id="queryCommandList" resultMap="Command" parameterType="com.yuk.bean.Command">
+		select <include refid="columns"/>
+		from Command a left join Command_Content b on a.id = b.command_id
+		<where>
+			<!--where标签：在if条件满足时添加where关键字,并截取掉第一个and或or-->
+			<if test="name!=null and !&quot;&quot;.equals(name.trim())">
+				and a.name=#{name}
+			</if>
+			<if test="description!=null and !&quot;&quot;.equals(description.trim())">
+				and a.description like '%' +#{description}+ '%'
+			</if>
+		</where>
+	</select>
+
+	<sql id="columns">a.id c_id,a.name,a.description,b.id,b.contents,b.command_id</sql>
+</mapper>

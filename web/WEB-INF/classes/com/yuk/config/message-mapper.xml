@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+		<!DOCTYPE mapper
+				PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+				"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Message">
+
+	<!--查询结果对象-->
+	<resultMap id="MessageResult" type="com.yuk.bean.Message">
+		<id column="id" jdbcType="INTEGER" property="id"/>
+		<result column="name" jdbcType="VARCHAR" property="name"/>
+		<result column="money" jdbcType="DOUBLE" property="money"/>
+	</resultMap>
+	<!--查询语句-->
+	<select id="queryAll" resultMap="MessageResult" parameterType="com.yuk.bean.Message">
+		select * from account1
+		<trim prefix="where" suffixOverrides="and">
+
+			<!--OGNL表达式-->
+			<if test="name!=null and !&quot;&quot;.equals(name.trim())">
+				 name=#{name} and
+			</if>
+
+			<if test="id>0">
+				id=#{id}
+			</if>
+
+		</trim>
+	</select>
+
+	<!--删除语句-->
+	<delete id="deleteOne" parameterType="int">
+		delete from account1 where id =#{id}
+	</delete>
+	<!--批量删除-->
+	<delete id="deleteBatch" parameterType="java.util.List">
+		delete from account1 where ID in
+		<foreach collection="list" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+
+	<!--单条新增-->
+	<insert id="insertOne" parameterType="com.yuk.bean.Message">
+		insert into account1(name,money) values(#{name},#{money})
+	</insert>
+	<!--批量新增-->
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO account1 (name,money)
+		<foreach collection="list" item="item" index="i">
+			<if test="i==0">
+				SELECT #{item.name},#{item.money}
+			</if>
+			<if test="i>0">
+				UNION ALL SELECT #{item.name},#{item.money}
+			</if>
+		</foreach>
+	</insert>
+
+
+</mapper>

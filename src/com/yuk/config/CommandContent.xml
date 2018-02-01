@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+		<!DOCTYPE mapper
+				PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+				"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CommandContent">
+
+	<resultMap id="Content" type="com.yuk.bean.CommandContent">
+		<id column="id" jdbcType="INTEGER" property="id"/>
+		<result column="contents" jdbcType="VARCHAR" property="contents"/>
+		<result column="command_id" jdbcType="VARCHAR" property="command_id"/>
+		<!--command：主表实体对象，Command.Command：主表对应的配置文件-->
+		<association property="command" resultMap="Command.Command"/>
+	</resultMap>
+
+
+</mapper>
